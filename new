@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Scaffold a new post:  ./new "My post title"
+set -euo pipefail
+cd "$(dirname "$0")"
+
+if [ $# -lt 1 ]; then
+  echo "usage: ./new \"Post title\""
+  exit 1
+fi
+
+title="$*"
+slug=$(printf '%s' "$title" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
+file="content/posts/${slug}.md"
+
+if [ -e "$file" ]; then
+  echo "already exists: $file"
+  exit 1
+fi
+
+cat > "$file" <<EOF
+---
+title: $title
+date: $(date +%Y-%m-%d)
+---
+
+Write your post here.
+EOF
+
+echo "✓ created $file"
+echo "  edit it, then run ./publish to go live"

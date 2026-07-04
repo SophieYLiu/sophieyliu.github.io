@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Build the site and push it live:  ./publish  ["optional commit message"]
+set -euo pipefail
+cd "$(dirname "$0")"
+
+python3 build.py
+
+git add -A
+if git diff --cached --quiet; then
+  echo "nothing changed — already up to date"
+  exit 0
+fi
+
+git commit -m "${*:-Update site}"
+git push
+echo "✓ published — live in ~1 min at https://sophieyliu.github.io/"
