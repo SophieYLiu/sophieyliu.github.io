@@ -22,7 +22,20 @@ CONTENT = ROOT / "content"
 POSTS_SRC = CONTENT / "posts"
 POSTS_OUT = ROOT / "posts"
 
-MD = markdown.Markdown(extensions=["fenced_code", "tables", "toc"])
+MD = markdown.Markdown(
+    extensions=["fenced_code", "tables", "toc", "pymdownx.arithmatex"],
+    extension_configs={"pymdownx.arithmatex": {"generic": True}},
+)
+
+# KaTeX assets, injected only into pages that actually contain math.
+KATEX_HEAD = (
+    '  <link rel="stylesheet" '
+    'href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />\n'
+)
+KATEX_BODY = """  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '\\\\[', right: '\\\\]', display: true}, {left: '\\\\(', right: '\\\\)', display: false}]});"></script>
+"""
 
 # ── Templates ────────────────────────────────────────────────────────────
 BASE = """<!DOCTYPE html>
@@ -32,7 +45,7 @@ BASE = """<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
   <link rel="stylesheet" href="/style.css" />
-</head>
+{katex_head}</head>
 <body>
   <header>
     <a href="/" class="site-title">{site_title}</a>
@@ -48,7 +61,7 @@ BASE = """<!DOCTYPE html>
   <footer>
     <p>{footer}</p>
   </footer>
-</body>
+{katex_body}</body>
 </html>
 """
 
@@ -87,11 +100,14 @@ def render_md(body: str) -> str:
 
 
 def page(title, main):
+    has_math = "arithmatex" in main
     return BASE.format(
         title=html.escape(title),
         site_title=html.escape(SITE_TITLE),
         main=main,
         footer=html.escape(FOOTER),
+        katex_head=KATEX_HEAD if has_math else "",
+        katex_body=KATEX_BODY if has_math else "",
     )
 
 
