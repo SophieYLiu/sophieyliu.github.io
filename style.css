@@ -134,6 +134,25 @@ article .body pre {
   margin-bottom: 1.25rem;
 }
 article .body pre code { background: none; padding: 0; }
+article .body table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+  margin: 1.5rem 0;
+}
+article .body th,
+article .body td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+article .body th {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+}
 
 /* ── Back link ── */
 .back {
